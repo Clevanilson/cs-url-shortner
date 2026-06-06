@@ -19,6 +19,6 @@ func TestURL(t *testing.T) {
 	t.Run("With invalid URL", func(t *testing.T) {
 		url, err := entities.NewURL("invalid", 13344)
 		assert.Equal(t, url, nil)
-		assert.Equal(t, err.Error(), "Invalid URL")
+		assert.Equal(t, err.Error(), "[DomainError]: Invalid URL")
 	})
 }
