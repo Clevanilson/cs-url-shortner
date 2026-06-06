@@ -1,6 +1,9 @@
 package repositories
 
-import "github.com/clevanilson/cs-url-shortner/internal/domain/entities"
+import (
+	"github.com/clevanilson/cs-url-shortner/internal/domain/entities"
+	"github.com/clevanilson/cs-url-shortner/pkg/c_errors"
+)
 
 type IURLRepository interface {
 	Save(url *entities.URL) error
@@ -23,6 +26,9 @@ func (r *UrlMemoryRepository) Save(url *entities.URL) error {
 }
 
 func (r *UrlMemoryRepository) GetByShortURL(shorten string) (*entities.URL, error) {
-	url := r.data[shorten]
+	url, ok := r.data[shorten]
+	if !ok {
+		return nil, c_errors.NewNotFoundError(shorten)
+	}
 	return url, nil
 }

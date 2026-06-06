@@ -24,4 +24,10 @@ func TestURLRepository(t *testing.T) {
 		assert.Equal(t, savedUrl, url)
 	})
 
+	t.Run("Trying to get a non-existent url", func(t *testing.T) {
+		savedUrl, err := sut.GetByShortURL("TX901")
+		assert.Equal(t, savedUrl, nil)
+		assert.Equal(t, err.Error(), "[NotFound]: TX901")
+	})
+
 }
