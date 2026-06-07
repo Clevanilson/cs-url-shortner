@@ -3,20 +3,24 @@ package repositories
 import (
 	"github.com/clevanilson/cs-url-shortner/internal/domain/entities"
 	"github.com/clevanilson/cs-url-shortner/pkg/c_errors"
+	"github.com/clevanilson/cs-url-shortner/pkg/database"
 )
 
 type IURLRepository interface {
 	Save(url *entities.URL) error
 	GetByShortURL(shorten string) (*entities.URL, error)
+	GetNextId() (int64, error)
 }
 
 type UrlMemoryRepository struct {
-	data map[string]*entities.URL
+	kvConnection database.KeyValueConnection
+	data         map[string]*entities.URL
 }
 
-func NewURLMemoryRepository() *UrlMemoryRepository {
+func NewURLMemoryRepository(kvConnection database.KeyValueConnection) *UrlMemoryRepository {
 	return &UrlMemoryRepository{
-		data: make(map[string]*entities.URL),
+		data:         make(map[string]*entities.URL),
+		kvConnection: kvConnection,
 	}
 }
 
@@ -31,4 +35,12 @@ func (r *UrlMemoryRepository) GetByShortURL(shorten string) (*entities.URL, erro
 		return nil, c_errors.NewNotFoundError(shorten)
 	}
 	return url, nil
+}
+
+func (r *UrlMemoryRepository) GetNextId() (int64, error) {
+	id, err := r.kvConnection.Increment("global:id")
+	if err != nil {
+		return 0, err
+	}
+	return id, nil
 }

@@ -1,8 +1,6 @@
 package usecases
 
 import (
-	"math/rand/v2"
-
 	"github.com/clevanilson/cs-url-shortner/internal/domain/entities"
 	"github.com/clevanilson/cs-url-shortner/internal/repositories"
 )
@@ -16,7 +14,11 @@ func NewCreateShortUrl(repository repositories.IURLRepository) *CreateShortUrl {
 }
 
 func (u *CreateShortUrl) Execute(input CreateShortUrlInput) (*CreateShortUrlOutput, error) {
-	url, err := entities.NewURL(input.LongUrl, rand.Uint64())
+	id, err := u.repostory.GetNextId()
+	if err != nil {
+		return nil, err
+	}
+	url, err := entities.NewURL(input.LongUrl, id)
 	if err != nil {
 		return nil, err
 	}

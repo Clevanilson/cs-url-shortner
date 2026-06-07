@@ -6,10 +6,12 @@ import (
 	"github.com/clevanilson/cs-url-shortner/internal/repositories"
 	"github.com/clevanilson/cs-url-shortner/internal/usecases"
 	"github.com/clevanilson/cs-url-shortner/pkg/assert"
+	"github.com/clevanilson/cs-url-shortner/pkg/database"
 )
 
 func TestCreateShortUrl(t *testing.T) {
-	repository := repositories.NewURLMemoryRepository()
+	kvConnection := database.NewRedisConnection()
+	repository := repositories.NewURLMemoryRepository(kvConnection)
 	sut := usecases.NewCreateShortUrl(repository)
 
 	t.Run("With valid data", func(t *testing.T) {

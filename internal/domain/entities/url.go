@@ -13,7 +13,7 @@ type URL struct {
 	shorten  string
 }
 
-func NewURL(original string, id uint64) (*URL, error) {
+func NewURL(original string, id int64) (*URL, error) {
 	if a, err := url.ParseRequestURI(original); err != nil {
 		fmt.Printf("%v", a)
 		return nil, c_errors.NewDomainError("Invalid URL")
