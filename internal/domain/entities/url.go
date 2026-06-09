@@ -24,6 +24,10 @@ func NewURL(original string, id int64) (*URL, error) {
 	}, nil
 }
 
+func Create(original string, shorten string) (*URL, error) {
+	return &URL{original, shorten}, nil
+}
+
 func (u *URL) Original() string {
 	return u.original
 }
