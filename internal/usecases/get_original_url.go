@@ -15,8 +15,11 @@ func NewGetOriginaUrl(repository repositories.IURLRepository) *GetOriginalUrl {
 
 func (u *GetOriginalUrl) Execute(input GetOriginalUrlInput) (*GetOriginalUrlOutput, error) {
 	url, err := u.repository.GetByShortURL(input.ShortUrl)
-	if err != nil {
+	if url == nil && err == nil {
 		return nil, c_errors.NewNotFoundError(input.ShortUrl)
+	}
+	if err != nil {
+		return nil, err
 	}
 	return &GetOriginalUrlOutput{OriginalUrl: url.Original()}, nil
 }

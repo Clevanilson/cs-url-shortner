@@ -10,15 +10,19 @@ import (
 )
 
 func TestCreateShortUrl(t *testing.T) {
-	kvConnection := database.NewRedisConnection()
-	repository := repositories.NewURLMemoryRepository(kvConnection)
+	redisConnection := database.NewRedisConnection()
+	cassandraConnection := database.NewCassandraConnection()
+	repository := repositories.NewUrlDatabaseRepository(
+		redisConnection,
+		cassandraConnection,
+	)
 	sut := usecases.NewCreateShortUrl(repository)
 
 	t.Run("With valid data", func(t *testing.T) {
 		input := usecases.CreateShortUrlInput{LongUrl: "https://google.com"}
 		output, err := sut.Execute(input)
 		assert.Equal(t, err, nil)
-		savedUrl, err := repository.GetByShortURL(output.ShortUrl)
+		savedUrl, err := repository.GetByShortURL(output.Code)
 		assert.Equal(t, err, nil)
 		assert.Equal(t, savedUrl.Original(), input.LongUrl)
 	})

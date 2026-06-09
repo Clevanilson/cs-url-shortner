@@ -11,8 +11,12 @@ import (
 )
 
 func TestGetOriginalUrl(t *testing.T) {
-	kvConnection := database.NewRedisConnection()
-	repository := repositories.NewURLMemoryRepository(kvConnection)
+	redisConnection := database.NewRedisConnection()
+	cassandraConnection := database.NewCassandraConnection()
+	repository := repositories.NewUrlDatabaseRepository(
+		redisConnection,
+		cassandraConnection,
+	)
 	sut := usecases.NewGetOriginaUrl(repository)
 
 	t.Run("With existing url", func(t *testing.T) {
