@@ -5,3 +5,13 @@ services:
     restart: unless-stopped
     ports:
       - "6379:6379"
+  cassandra:
+    image: cassandra:5.0
+    container_name: cassandra
+    ports:
+      - "9042:9042"
+    networks:
+      - cassandra-network
+networks:
+  cassandra-network:
+    driver: bridge
